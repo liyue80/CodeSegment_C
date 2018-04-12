@@ -39,21 +39,25 @@ int dictSetValue(string_dict dict, const char *key, const char *value);
 //
 // ==============================================
 //
-// string_dict dict;
-// char value[STRING_DICT_MAX_KEY_VALUE_LEN + 1];
-//
-// dictInitialize(&dict);
-//
-// dictSetValue(dict, "key1", "value1");
-// dictSetValue(dict, "key2", "value2");
-// dictSetValue(dict, "key3", "value3");
-// dictSetValue(dict, "key3", "3");
-// dictSetValue(dict, "key2", "2");
-// dictSetValue(dict, "key1", "1");
-//
-// dictGetValue(dict, "key1", value, sizeof(value));
-// dictGetValue(dict, "key2", value, sizeof(value));
-// dictGetValue(dict, "key3", value, sizeof(value));
-//
-// dictDestory(dict);
+//string_dict dict;
+//char value[STRING_DICT_MAX_KEY_VALUE_LEN + 1];
+//dictInitialize(&dict);
+//dictSetValue(dict, "key1", "value1");
+//dictSetValue(dict, "key2", "value2");
+//dictSetValue(dict, "key3", "value3");
+//dictSetValue(dict, "y2", "wrong");
+//dictSetValue(dict, "key3", "3");
+//dictSetValue(dict, "key2", "2");
+//dictSetValue(dict, "key1", "1");
+//if (!dictGetValue(dict, "key1", value, sizeof(value)))
+//    printf("key1 => %s\n", value);
+//if (!dictGetValue(dict, "key2", value, sizeof(value)))
+//    printf("key2 => %s\n", value);
+//if (!dictGetValue(dict, "key3", value, sizeof(value)))
+//    printf("key3 => %s\n", value);
+//if (dictGetValue(dict, "y1", value, sizeof(value)) == 1)
+//    printf("y1 => NOT FOUND\n");
+//if (dictGetValue(dict, "y3", value, sizeof(value)) == 1)
+//    printf("y3 => NOT FOUND\n");
+//dictDestory(dict);
 //

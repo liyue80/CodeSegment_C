@@ -22,9 +22,18 @@ static int _dictSearch(char *data, const char *key, char **ppKey, char **ppValue
     char * ptrValueEnd = NULL;
 
     sprintf_s(keyExt, sizeof(keyExt), "%s%c", key, STRING_DICT_EQUAL);
-    ptrKey = strstr(data, keyExt);
-    if (!ptrKey)
-        return 1;
+    ptrKey = data;
+    do {
+        ptrKey = strstr(ptrKey, keyExt);
+        if (!ptrKey)
+            return 1;
+        if (ptrKey != data && *(ptrKey-1) != STRING_DICT_DELIMIT) {
+            ptrKey += strlen(key);
+        }
+        else {
+            break;
+        }
+    } while (1);
 
     ptrValue = strchr(ptrKey, STRING_DICT_EQUAL);
     assert(ptrValue);
@@ -50,9 +59,18 @@ static int _dictSearchConst(const char *data, const char *key, const char **ppKe
     const char * ptrValueEnd = NULL;
 
     sprintf_s(keyExt, sizeof(keyExt), "%s%c", key, STRING_DICT_EQUAL);
-    ptrKey = strstr(data, keyExt);
-    if (!ptrKey)
-        return 1;
+    ptrKey = data;
+    do {
+        ptrKey = strstr(ptrKey, keyExt);
+        if (!ptrKey)
+            return 1;
+        if (ptrKey != data && *(ptrKey-1) != STRING_DICT_DELIMIT) {
+            ptrKey += strlen(key);
+        }
+        else {
+            break;
+        }
+    } while (1);
 
     ptrValue = strchr(ptrKey, STRING_DICT_EQUAL);
     assert(ptrValue);
@@ -142,7 +160,6 @@ int dictDeleteValue(string_dict dict, const char *key)
 int dictGetValue(const string_dict dict, const char *key, char *value, unsigned size)
 {
     string_dict_internal * pidict = (string_dict_internal*)dict;
-    char keyExt[STRING_DICT_MAX_KEY_VALUE_LEN + 8] = {0};
     const char * ptrKey = NULL;
     const char * ptrValue = NULL;
     const char * ptrValueEnd = NULL;
@@ -157,17 +174,8 @@ int dictGetValue(const string_dict dict, const char *key, char *value, unsigned 
     if (!value || size <= 0)
         return -1;
 
-    sprintf_s(keyExt, sizeof(keyExt), "%s%c", key, STRING_DICT_EQUAL);
-    ptrKey = strstr(pidict->data, keyExt);
-    if (!ptrKey)
+    if (_dictSearchConst(pidict->data, key, &ptrKey, &ptrValue, &ptrValueEnd) == 1)
         return 1; // not found
-
-    ptrValue = strchr(ptrKey, STRING_DICT_EQUAL);
-    assert(ptrValue);
-    ptrValue++;
-
-    ptrValueEnd = strchr(ptrValue, STRING_DICT_DELIMIT);
-    assert(ptrValueEnd);
 
     while (ptrValue < ptrValueEnd && nCopied < size - 1)
     {
