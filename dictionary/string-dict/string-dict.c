@@ -236,3 +236,55 @@ int dictSetValue(string_dict dict, const char *key, const char *value)
     }
     return 0;
 }
+
+void* dictEnumerate(string_dict dict, const void *iter, char *key, int key_size, char *value, int value_size)
+{
+    string_dict_internal * pidict = (string_dict_internal*)dict;
+    const char * ptrKey = NULL;
+    const char * ptrValue = NULL;
+    const char * ptrValueEnd = NULL;
+    int nCopied = 0;
+
+    if (!pidict || !pidict->data)
+        return NULL;
+    if (!key || !key_size)
+        return NULL;
+    if (!value || !value_size)
+        return NULL;
+
+    ptrKey = (iter ? (const char*)iter : pidict->data);
+    if (*ptrKey == '\0')
+        return NULL; // NO MORE
+
+    ptrValue = strchr(ptrKey, STRING_DICT_EQUAL);
+    assert(ptrValue);
+
+    nCopied = 0;
+    while (ptrKey < ptrValue && nCopied < key_size - 1)
+    {
+        *key = *ptrKey;
+        key++;
+        ptrKey++;
+        nCopied++;
+    }
+
+    *key = '\0';
+
+    ptrValue++;
+    nCopied = 0;
+
+    ptrValueEnd = strchr(ptrValue, STRING_DICT_DELIMIT);
+    assert(ptrValueEnd);
+
+    while (ptrValue < ptrValueEnd && nCopied < value_size - 1)
+    {
+        *value = *ptrValue;
+        value++;
+        ptrValue++;
+        nCopied++;
+    }
+
+    *value = '\0';
+
+    return (void*)(ptrValueEnd + 1);
+}

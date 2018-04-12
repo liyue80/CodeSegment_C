@@ -35,6 +35,13 @@ int dictGetValue(const string_dict dict, const char *key, char *value, unsigned 
 int dictSetValue(string_dict dict, const char *key, const char *value);
 
 //
+// return value:
+//   OK: return iter for next query
+//   NO MORE: return = NULL
+//   ERROR: return = NULL
+void* dictEnumerate(string_dict dict, void *iter, char *key, int key_size, char *value, int value_size);
+
+//
 // Sample and testing code
 //
 // ==============================================
@@ -59,5 +66,8 @@ int dictSetValue(string_dict dict, const char *key, const char *value);
 //    printf("y1 => NOT FOUND\n");
 //if (dictGetValue(dict, "y3", value, sizeof(value)) == 1)
 //    printf("y3 => NOT FOUND\n");
+//while ((iter = dictEnumerate(dict, iter, key, sizeof(key), value, sizeof(value))) != NULL) {
+//    printf("%s => %s\n", key, value);
+//}
 //dictDestory(dict);
 //
